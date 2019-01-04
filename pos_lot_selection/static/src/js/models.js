@@ -54,3 +54,39 @@ odoo.define("pos_lot_selection.models", function (require) {
     });
 
 });
+
+/* This code lets us inherit the clickSwitchSign function from point_of_sale addon  */
+odoo.define('pos_secure_keys.pos', function (require) {
+"use strict";
+
+var screens = require('point_of_sale.screens');
+
+    var SecureNumpadWidget = screens.NumpadWidget.include({
+
+
+        //clickSwitchSign: function() {
+        //    alert("Whats up my dawgs!");
+        //},
+    clickSwitchSign: function() {
+        var users = this.pos.users;
+        var self = this;
+        var cashier = this.pos.get('cashier') || this.pos.get_cashier();
+        var has_price_control_rights = !this.pos.config.restrict_price_control || cashier.role == 'manager';
+        const filtered = users.filter(person => person.role == 'manager');
+        const managers = manager => (manager.role === 'manager');
+
+        for(var i = 0, len = users.length; i < len; i++){
+            if(users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin){
+               	alert("Please enter manager password");
+                return this.gui.ask_password(filtered[filtered.findIndex(managers)].pos_security_pin).then(function(){
+               	return self.state.switchSign();
+                    });
+            };
+        };
+
+    },
+
+
+    });
+
+});
