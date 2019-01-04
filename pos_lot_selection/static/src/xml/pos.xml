@@ -20,5 +20,12 @@
             </div>
         </t>
     </t>
-
+    <!-- This code is to inherit a function from addons  -->
+    <data>
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_clear/static/src/js/models.js"></script>
+            </xpath>
+        </template>
+    </data>
 </templates>
